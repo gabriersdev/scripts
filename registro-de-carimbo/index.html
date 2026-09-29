@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de Carimbo - Passaporte Estrada Real</title>
+  
+  <link rel="stylesheet" href="/assets/bootstrap-cerulean.min.css">
+  <script src="/assets/sweet-alert.min.js"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+    
+    * {
+      font-family: "Inter", sans-serif;
+    }
+    
+    .text-small {
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container my-5 d-flex flex-column gap-4">
+  <hgroup>
+    <h1 class="fs-2 fw-bold">Registro de Carimbo</h1>
+    <h2 class="text fw-normal fs-6">Passaporte Estrada Real</h2>
+  </hgroup>
+  
+  <form class="d-flex flex-column flex-wrap gap-3">
+    <div class="d-flex flex-row flex-wrap gap-3">
+      <div class="form-group">
+        <label class="form-label" for="stamp-number">
+          Número do carimbo
+        </label>
+        
+        <div>
+          <input type="text" class="form-control" placeholder="000000" inputmode="numeric" id="stamp-number"
+                 minlength="1" autofocus>
+          
+          <div class="mt-1 d-none">
+              <span class="d-block text-danger text-small text-truncate" id="text-validation-stamp-number">
+                Texto de crítica
+              </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="date">
+          Data de marcação
+        </label>
+        
+        <div class="input-group">
+          <input type="text" class="form-control text-uppercase" placeholder="00/00/0000" inputmode="numeric"
+                 id="date" minlength="10" maxlength="10">
+          
+          <!--          TODO: utilizar classes BS ao inves de lançar código seco assim-->
+          <label>
+            <input type="date" id="hidden-datepicker" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; padding: 0; margin: 0; border: none;">
+          </label>
+          
+          <button type="button" class="btn btn-outline-secondary" id="btn-active-datepicker" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-calendar-week" viewBox="0 0 16 16">
+              <path
+                d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+              <path
+                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="mt-1 d-none">
+            <span class="d-block text-danger text-small text-truncate" id="text-validation-date">
+              Texto de crítica
+            </span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="d-flex flex-wrap gap-2">
+      <button type="reset" class="btn btn-secondary d-flex align-items-center gap-1" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+          <path
+            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+        </svg>
+        
+        <span>Limpar</span>
+      </button>
+      
+      <button type="submit" class="btn btn-primary d-flex align-items-center gap-1" id="btn-submit-form" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+        </svg>
+        
+        <span>Registrar</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Mapeamento dos elementos do DOM para facilitar o uso no script
+  const [
+    stampNumber,
+    inputDate,
+    btnActiveDatePicker,
+    btnSubmitForm,
+    textValidationStampNumber,
+    textValidationDate,
+    hiddenDatepicker,
+    form
+  ] = [
+    '#stamp-number',
+    '#date',
+    '#btn-active-datepicker',
+    '#btn-submit-form',
+    '#text-validation-stamp-number',
+    '#text-validation-date',
+    '#hidden-datepicker',
+    'form'
+  ].map(id => document.querySelector(id));
+  
+  // Objeto centralizador das mensagens de erro para facilitar a manutenção e troca
+  const validationMessages = {
+    stampNumber: {
+      required: "O número do carimbo é obrigatório.",
+      invalidFormat: "Apenas números são permitidos."
+    },
+    date: {
+      required: "A data é obrigatória.",
+      invalidFormat: "A data não é válida.",
+      futureDate: "A data não pode estar no futuro.",
+      veryOldDate: "A data é muito antiga."
+    }
+  };
+  
+  // Calcula a data atual estritamente no fuso horário de Brasília (GMT-3)
+  // Isso impede problemas caso o usuário do sistema esteja fisicamente em outro fuso horário
+  function getTodayGMT3() {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const gmt3 = new Date(utc - (3600000 * 3));
+    const day = String(gmt3.getDate()).padStart(2, '0');
+    const month = String(gmt3.getMonth() + 1).padStart(2, '0');
+    const year = gmt3.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  
+  // Valida o número do carimbo de acordo com as regras de negócio
+  function validateStampNumber() {
+    if (!stampNumber.value || stampNumber.value.length < 1) return validationMessages.stampNumber.required;
+    
+    // Ignora os pontos (usados visualmente para milhares) para checar se o resto é puramente numérico
+    const unmaskedValue = stampNumber.value.replace(/\./g, '');
+    if (/[^0-9]/.test(unmaskedValue)) return validationMessages.stampNumber.invalidFormat;
+    
+    return null; // Retorna null se não houver erros
+  }
+  
+  // Valida a data, verificando formato, veracidade da data no calendário e limites temporais
+  function validateDate() {
+    // Exige que o campo tenha exatamente 10 caracteres (DD/MM/AAAA)
+    if (inputDate.value.length !== 10) return validationMessages.date.invalidFormat;
+    
+    const [day, month, year] = inputDate.value.split('/').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    
+    // Verifica se a data informada existe de verdade (ex: bloqueia 31 de Fevereiro)
+    if (dateObj.getFullYear() !== year || dateObj.getMonth() !== month - 1 || dateObj.getDate() !== day) {
+      return validationMessages.date.invalidFormat;
+    }
+    
+    // Configura a data de "agora" em GMT-3 para referência
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const gmt3 = new Date(utc - (3600000 * 3));
+    gmt3.setHours(23, 59, 59, 999);
+    
+    // Não permite registro de datas que ainda não ocorreram
+    if (dateObj > gmt3) return validationMessages.date.futureDate;
+    
+    // Calcula com precisão matemática a data equivalente a 30 dias atrás (no fuso correto)
+    let dateIn30daysAgo = new Date(gmt3.getTime());
+    dateIn30daysAgo.setDate(dateIn30daysAgo.getDate() - 30);
+    dateIn30daysAgo.setHours(0, 0, 0, 0);
+    
+    // Bloqueia registros antigos demais (além de 30 dias atrás)
+    if (dateObj < dateIn30daysAgo) return validationMessages.date.veryOldDate;
+    
+    return null; // Retorna null se não houver erros
+  }
+  
+  // Função principal de validação que atualiza o estado visual da interface (mensagens e botão)
+  function validateForm() {
+    const stampError = validateStampNumber();
+    const dateError = validateDate();
+    
+    // Exibe ou oculta o texto de erro para o Número do Carimbo
+    if (stampError) {
+      textValidationStampNumber.textContent = stampError;
+      textValidationStampNumber.parentElement.classList.remove('d-none');
+    } else {
+      textValidationStampNumber.parentElement.classList.add('d-none');
+    }
+    
+    // Exibe ou oculta o texto de erro para a Data
+    if (dateError) {
+      textValidationDate.textContent = dateError;
+      textValidationDate.parentElement.classList.remove('d-none');
+    } else {
+      textValidationDate.parentElement.classList.add('d-none');
+    }
+    
+    // Só habilita o botão de Submissão ("Registrar") se não existir nenhum erro no formulário
+    btnSubmitForm.disabled = !!(stampError || dateError);
+  }
+  
+  // Evento que aciona a máscara do Carimbo sempre que o usuário digita algo
+  stampNumber.addEventListener('input', (e) => {
+    // Apaga imediatamente tudo que não for dígito
+    let value = e.target.value.replace(/\D/g, '');
+    
+    // Aplica a formatação visual de milhares se houver valor (ex: 123.456)
+    if (value) {
+      // Regra Regex que insere o ponto a cada 3 dígitos lidos de trás pra frente
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    
+    e.target.value = value;
+    validateForm(); // Executa a validação em tempo real com o novo valor
+  });
+  
+  // Evento que aciona a máscara da Data sempre que o usuário digita algo
+  inputDate.addEventListener('input', (e) => {
+    // Remove não-dígitos e trava o campo em 8 números máximos (DDMMAAAA)
+    let v = e.target.value.replace(/\D/g, '');
+    if (v.length > 8) v = v.slice(0, 8);
+    
+    // Injeta as barras automaticamente formatando como DD/MM/AAAA
+    if (v.length > 4) {
+      v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+    } else if (v.length > 2) {
+      v = v.replace(/(\d{2})(\d{1,2})/, '$1/$2');
+    }
+    
+    e.target.value = v;
+    validateForm(); // Executa a validação em tempo real com o novo valor
+  });
+  
+  // Abre o calendário nativo do dispositivo quando clica no botão com ícone de calendário
+  btnActiveDatePicker.addEventListener('click', () => {
+    if (typeof hiddenDatepicker.showPicker === 'function') {
+      try {
+        hiddenDatepicker.showPicker(); // Método moderno de abrir datepickers
+      } catch (e) {
+        hiddenDatepicker.focus(); // Prevenção de fallback
+      }
+    } else {
+      hiddenDatepicker.focus();
+    }
+  });
+  
+  // Pega a data selecionada no datepicker invisível e a insere formatada no nosso campo visual
+  hiddenDatepicker.addEventListener('change', (e) => {
+    if (e.target.value) {
+      // Datepickers HTML retornam no formato AAAA-MM-DD (ISO)
+      const [year, month, day] = e.target.value.split('-');
+      inputDate.value = `${day}/${month}/${year}`; // Formata para o padrão brasileiro
+      validateForm();
+    }
+  });
+  
+  // Intercepta a submissão nativa do formulário (que atualizaria a página se não prevenida)
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    validateForm(); // Dupla checagem de segurança ao enviar
+    
+    if (!btnSubmitForm.disabled) {
+      // Se válido, exibe o pop-up bonitinho do SweetAlert
+      Swal.fire("Sucesso!", "O carimbo foi registrado com sucesso.", "success").then(() => {
+        form.reset(); // Ao dar "OK" no modal, o formulário é apagado
+      });
+    }
+  });
+  
+  // Intercepta o evento de limpar formulário (seja via botão "Limpar" ou form.reset())
+  form.addEventListener('reset', () => {
+    // Aguarda uma fração de milissegundo para a tela apagar antes de repor o valor default da data
+    setTimeout(() => {
+      inputDate.value = getTodayGMT3();
+      validateForm(); // Valida de novo para limpar os textos em vermelho do estado anterior
+    }, 10);
+  });
+  
+  // Prepara o formulário assim que a página é carregada pela primeira vez
+  function initForm() {
+    if (!inputDate.value) {
+      inputDate.value = getTodayGMT3(); // Insere a data de hoje por padrão
+    }
+    validateForm(); // Valida pra habilitar/desabilitar o botão desde o start
+  }
+  
+  initForm();
+</script>
+</body>
+
+</html>
