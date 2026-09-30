@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registro de Carimbo - Passaporte Estrada Real</title>
   
-  <link rel="stylesheet" href="/assets/bootstrap-cerulean.min.css">
-  <script src="/assets/sweet-alert.min.js"></script>
+  <link rel="stylesheet" href="./assets/bootstrap-cerulean.min.css">
+  <script src="./assets/sweet-alert.min.js"></script>
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
@@ -57,9 +57,9 @@
           <input type="text" class="form-control text-uppercase" placeholder="00/00/0000" inputmode="numeric"
                  id="date" minlength="10" maxlength="10">
           
-          <!--          TODO: utilizar classes BS ao inves de lançar código seco assim-->
+          
           <label>
-            <input type="date" id="hidden-datepicker" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; padding: 0; margin: 0; border: none;">
+            <input type="date" id="hidden-datepicker" class="visually-hidden">
           </label>
           
           <button type="button" class="btn btn-outline-secondary" id="btn-active-datepicker" tabindex="-1">
