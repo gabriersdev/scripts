@@ -1,30 +1,30 @@
-# Check In (Turismo)
+# Check-in Turístico
 
-Este projeto implementa um formulário simples de registro de check-in para o turista ou agente de Turismo dar Check-in no local em foi visitado (?)
+Este projeto implementa um formulário digital para registro de check-in de turistas e agentes de viagens, com o objetivo de contabilizar e documentar as visitas aos pontos turísticos da cidade de forma prática e rápida.
 
-## Ideias propostas
+## Funcionalidades e Requisitos Planejados
 
-- URL base: https://govtursabara.lovable.app/check-in
+- **URL base:** `https://govtursabara.lovable.app/check-in`
 
-- Para cada local que o formulário quiser atender, terá um path diferente amigável, a exceção do CAT, que será o endereço da raiz /check-in. Por exemplo:
-  - Solar do Padre Corrêa: .../check-in/solar-padre-correa
-  - Biblioteca de Sabará: .../check-in/biblioteca
-  - Igreja do Ó: .../check-in/igreja-do-o
-  - Borrachalioteca: .../check-in/borrachalioteca
-  - CAT: .../check-in
+- **Rotas Dinâmicas e Amigáveis:** Cada local de visitação terá um caminho (path) amigável específico na URL. A exceção será o CAT (Centro de Atendimento ao Turista), que responderá pela rota raiz (`/check-in`). Exemplos de rotas:
+  - Solar do Padre Corrêa: `.../check-in/solar-padre-correa`
+  - Biblioteca de Sabará: `.../check-in/biblioteca`
+  - Igreja do Ó: `.../check-in/igreja-do-o`
+  - Borrachalioteca: `.../check-in/borrachalioteca`
+  - CAT: `.../check-in`
 
-- A imagem lateral esquerda mudar de acordo com o local que o QR-Code corresponder.
+- **Personalização Visual Dinâmica:** A imagem de destaque (lateral esquerda) será alterada automaticamente, refletindo o ponto turístico correspondente ao QR-Code lido ou à rota acessada.
 
-- Salvar os dados que o usuário preencher localmente e recuperá-los quando a página for novamente carregada para um novo path - para evitar que o usuário envie por engano várias e várias vezes o mesmo formulário. Dar feedback ao usuário que houve recuperação dos dados armazenados.
+- **Persistência de Dados (Local Storage):** Os dados preenchidos serão salvos localmente no navegador. Caso o turista acesse a página novamente para um novo ponto turístico, suas informações serão recuperadas automaticamente. O sistema deve exibir um aviso (feedback) amigável informando que os dados foram recuperados com sucesso. Essa medida visa evitar o preenchimento repetitivo e múltiplos envios acidentais.
 
-- Formular um Termos de Uso dos Dados e Política de Privacidade, sobre a manipulação dos dados que forem informados pelo usuário no formulário e possível contato posteriormente.
+- **Termos de Uso e Política de Privacidade:** Elaborar um documento de Termos de Uso e Política de Privacidade claro, explicando o tratamento e armazenamento dos dados fornecidos e as regras para um eventual contato posterior.
 
-- Deixar checkbox da Concordância com os termos de serviço já marcado (verificar LGPD sobre isso), para facilitar o preenchimento do formulário pelo usuário.
+- **Concordância com Termos de Serviço:** Avaliar a viabilidade jurídica (sob a ótica da LGPD) de manter o checkbox de aceite dos termos de serviço pré-marcado, visando facilitar a conversão e o preenchimento por parte do usuário.
 
-- O input de cidade de origem deve ter uma opção com autocomplete que carregue todos os municípios do país, seguido da UF dos estados para facilitar o preenchimento do usuário. Pensar uma forma de recomendar cidades "mais relevantes", carregar de forma fluída e sem pesar a página e o usuário selecionar.
+- **Autocompletar Inteligente para Cidades:** O campo de "cidade de origem" deverá contar com recurso de autocompletar consultando uma base de todos os municípios do país (Cidade - UF). A implementação deve garantir o carregamento fluido, sem perda de performance, e, idealmente, destacar as cidades mais relevantes ou de origem mais frequente.
 
-- Usar máscara para o número de telefone - sempre exigir um número com o padrão: (DD) XXXXX-XXXX. Utilizar inputmode=numeric para que, no celular, já apareça o teclado numérico.
+- **Máscara e Teclado Numérico para Telefone:** Aplicar máscara de formatação obrigatória para o campo de telefone no padrão `(DD) XXXXX-XXXX`. Utilizar o atributo `inputmode="numeric"` na tag HTML para acionar automaticamente o teclado numérico em dispositivos móveis.
 
-- Implementar validações enquanto o usuário preenche o formulário, já retornando feedback sobre o que ele faz - evitando mandar feedback apenas quando concluir a operação.
+- **Validação de Dados em Tempo Real:** Fornecer feedback imediato (validação inline) enquanto o usuário preenche o formulário (ex: e-mail inválido, formato incorreto), evitando que as mensagens de erro apareçam somente na tentativa de submissão final.
 
-- Direcionar o usuário, após o preenchimento, envio e registro do formulário para uma página sobre a cidade, o que fazer, talvez até mesmo o Instagram: descubra.sabara
+- **Redirecionamento Pós-Check-in:** Após a conclusão do registro, direcionar o visitante para uma página com informações e roteiros da cidade, ou diretamente para o perfil oficial de turismo no Instagram (ex: `@descubra.sabara`).

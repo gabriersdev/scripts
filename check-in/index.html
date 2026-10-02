@@ -9,6 +9,7 @@
   <link rel="icon" href="https://www.jetbrains.com/favicon.ico?r=5687" type="image/x-icon">
   <link rel="stylesheet" href="./assets/bootstrap-cerulean.min.css">
   <script src="./assets/sweet-alert.min.js"></script>
+  <!--  https://govtursabara.lovable.app/check-in -->
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
@@ -29,13 +30,244 @@
       <h1 class="fs-2 fw-bold">Check-in - Visite Sabará</h1>
     </hgroup>
 
-    <form class="d-flex flex-column flex-wrap gap-3">
+    <form class="d-flex flex-column flex-wrap gap-3" id="checkin-form">
+      <div class="d-flex flex-column flex-wrap gap-3">
+        
+        <div class="form-group">
+          <label class="form-label" for="name">Nome completo</label>
+          <div>
+            <input type="text" class="form-control" placeholder="Seu nome" id="name" autofocus>
+            <div class="mt-1 d-none">
+              <span class="d-block text-danger text-small text-truncate" id="text-validation-name">
+                O nome é obrigatório.
+              </span>
+            </div>
+          </div>
+        </div>
 
+        <div class="form-group">
+          <label class="form-label" for="city">Cidade de origem</label>
+          <div>
+            <input type="text" class="form-control" placeholder="Ex: São Paulo - SP" id="city" list="cities-list">
+            <datalist id="cities-list">
+              <option value="Belo Horizonte - MG">
+              <option value="São Paulo - SP">
+              <option value="Rio de Janeiro - RJ">
+              <option value="Sabará - MG">
+              <option value="Ouro Preto - MG">
+            </datalist>
+            <div class="mt-1 d-none">
+              <span class="d-block text-danger text-small text-truncate" id="text-validation-city">
+                A cidade de origem é obrigatória.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="whatsapp">WhatsApp</label>
+          <div>
+            <input type="tel" class="form-control" placeholder="(00) 00000-0000" inputmode="numeric" id="whatsapp" maxlength="15">
+            <div class="mt-1 d-none">
+              <span class="d-block text-danger text-small text-truncate" id="text-validation-whatsapp">
+                O WhatsApp é obrigatório e deve ser válido.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-check mt-2">
+          <input type="checkbox" class="form-check-input" id="terms" checked>
+          <label class="form-check-label" for="terms">
+            Concordo com os <a href="#" class="text-decoration-underline">Termos de Uso</a> e <a href="#" class="text-decoration-underline">Política de Privacidade</a>.
+          </label>
+          <div class="mt-1 d-none">
+            <span class="d-block text-danger text-small text-truncate" id="text-validation-terms">
+              Você precisa concordar com os termos.
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <button type="submit" class="btn btn-primary d-flex align-items-center gap-1" id="btn-submit-form" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+          </svg>
+          <span>Fazer Check-in</span>
+        </button>
+      </div>
     </form>
   </div>
 
   <script>
+    const [
+      inputName,
+      inputCity,
+      inputWhatsapp,
+      checkboxTerms,
+      btnSubmitForm,
+      textValidationName,
+      textValidationCity,
+      textValidationWhatsapp,
+      textValidationTerms,
+      form
+    ] = [
+      '#name',
+      '#city',
+      '#whatsapp',
+      '#terms',
+      '#btn-submit-form',
+      '#text-validation-name',
+      '#text-validation-city',
+      '#text-validation-whatsapp',
+      '#text-validation-terms',
+      '#checkin-form'
+    ].map(id => document.querySelector(id));
 
+    const validationMessages = {
+      name: "O nome é obrigatório.",
+      city: "A cidade de origem é obrigatória.",
+      whatsapp: {
+        required: "O WhatsApp é obrigatório.",
+        invalid: "Formato inválido. Use (DD) XXXXX-XXXX."
+      },
+      terms: "Você precisa concordar com os termos."
+    };
+
+    function validateName() {
+      return inputName.value.trim().length < 3 ? validationMessages.name : null;
+    }
+
+    function validateCity() {
+      return inputCity.value.trim().length < 3 ? validationMessages.city : null;
+    }
+
+    function validateWhatsapp() {
+      if (!inputWhatsapp.value) return validationMessages.whatsapp.required;
+      if (inputWhatsapp.value.length < 14) return validationMessages.whatsapp.invalid;
+      return null;
+    }
+
+    function validateTerms() {
+      return !checkboxTerms.checked ? validationMessages.terms : null;
+    }
+
+    function validateForm() {
+      const nameError = validateName();
+      const cityError = validateCity();
+      const whatsappError = validateWhatsapp();
+      const termsError = validateTerms();
+
+      if (nameError && inputName.value.length > 0) {
+        textValidationName.textContent = nameError;
+        textValidationName.parentElement.classList.remove('d-none');
+      } else {
+        textValidationName.parentElement.classList.add('d-none');
+      }
+
+      if (cityError && inputCity.value.length > 0) {
+        textValidationCity.textContent = cityError;
+        textValidationCity.parentElement.classList.remove('d-none');
+      } else {
+        textValidationCity.parentElement.classList.add('d-none');
+      }
+
+      if (whatsappError && inputWhatsapp.value.length > 0) {
+        textValidationWhatsapp.textContent = whatsappError.invalid || whatsappError;
+        textValidationWhatsapp.parentElement.classList.remove('d-none');
+      } else {
+        textValidationWhatsapp.parentElement.classList.add('d-none');
+      }
+      
+      if (termsError) {
+        textValidationTerms.textContent = termsError;
+        textValidationTerms.parentElement.classList.remove('d-none');
+      } else {
+        textValidationTerms.parentElement.classList.add('d-none');
+      }
+
+      btnSubmitForm.disabled = !!(
+        nameError || cityError || whatsappError || termsError ||
+        inputName.value.trim().length === 0 ||
+        inputCity.value.trim().length === 0 ||
+        inputWhatsapp.value.length === 0
+      );
+    }
+
+    inputWhatsapp.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      
+      if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+      }
+      if (v.length > 9) {
+        v = v.replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+      } else if (v.length > 8) {
+        v = v.replace(/(\d{4})(\d{1,4})$/, '$1-$2');
+      }
+
+      e.target.value = v;
+      validateForm();
+    });
+
+    function saveToLocal() {
+      const data = {
+        name: inputName.value,
+        city: inputCity.value,
+        whatsapp: inputWhatsapp.value
+      };
+      localStorage.setItem('checkin_data', JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+      const data = JSON.parse(localStorage.getItem('checkin_data'));
+      if (data) {
+        if(data.name) inputName.value = data.name;
+        if(data.city) inputCity.value = data.city;
+        if(data.whatsapp) inputWhatsapp.value = data.whatsapp;
+        
+        if(data.name || data.city || data.whatsapp) {
+           setTimeout(() => {
+             if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'info',
+                  title: 'Seus dados foram recuperados!',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+             }
+             validateForm();
+           }, 300);
+        }
+      }
+    }
+
+    inputName.addEventListener('input', () => { validateForm(); saveToLocal(); });
+    inputCity.addEventListener('input', () => { validateForm(); saveToLocal(); });
+    checkboxTerms.addEventListener('change', validateForm);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      validateForm();
+
+      if (!btnSubmitForm.disabled) {
+        saveToLocal();
+        
+        if (typeof Swal !== 'undefined') {
+          Swal.fire("Check-in Realizado!", "Seu check-in foi registrado com sucesso. Você será redirecionado...", "success").then(() => {
+             window.location.href = "https://instagram.com/descubra.sabara";
+          });
+        }
+      }
+    });
+
+    loadFromLocal();
+    validateForm();
   </script>
 </body>
 
